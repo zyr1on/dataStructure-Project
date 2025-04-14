@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Uludağ Üniversitesi - En Kısa Yol</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map { height: 90vh; }
+        #controls {
+            padding: 10px;
+            font-family: Arial;
+        }
+    </style>
+</head>
+<body>
+
+<div id="controls">
+    <label>Başlangıç:
+        <select id="startSelect"></select>
+    </label>
+    <label>Bitiş:
+        <select id="endSelect"></select>
+    </label>
+    <button onclick="showShortestPath()">Yolu Göster</button>
+</div>
+<div id="stepList" style="padding:10px; font-family:Arial; font-size:14px;"></div>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+const map = L.map('map').setView([40.2217, 28.8708], 16);
+
+map.on('click', function(e) {
+    const latlng = e.latlng;
+    const nearest = buildings.reduce((prev, curr) => {
+        const prevDist = Math.hypot(prev.coords[0] - latlng.lat, prev.coords[1] - latlng.lng);
+        const currDist = Math.hypot(curr.coords[0] - latlng.lat, curr.coords[1] - latlng.lng);
+        return currDist < prevDist ? curr : prev;
+    });
+
+    const popup = L.popup()
+        .setLatLng(latlng)
+        .setContent(`Bu noktaya en yakın düğüm: <b>${nearest.name}</b><br><button onclick="setStart('${nearest.name}')">Başlangıç olarak ayarla</button><br><button onclick="setEnd('${nearest.name}')">Bitiş olarak ayarla</button>`)
+        .openOn(map);
+});
+
+function setStart(name) {
+    startSelect.value = name;
+    map.closePopup();
+}
+function setEnd(name) {
+    endSelect.value = name;
+    map.closePopup();
+}
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+const buildings = [
+    { name: "üniversite ana giriş", coords: [40.21925, 28.87986111111111] },
+    { name: "Ar1", coords: [40.2195, 28.87775] },
+    { name: "Uü Güzel Sanatlar Fakültesi", coords: [40.221555555555554, 28.875694444444445] },
+    { name: "Ar2", coords: [40.22227777777778, 28.875055555555555] },
+    { name: "Ar3", coords: [40.22097222222222, 28.872694444444445] },
+    { name: "Afet Acil Durum", coords: [40.221611111111116, 28.87213888888889] },
+    { name: "Uü Camii", coords: [40.22316666666667, 28.87066666666667] },
+    { name: "Ar4", coords: [40.22391666666667, 28.86986111111111] },
+    { name: "Göz Hastanesi", coords: [40.223305555555555, 28.86877777777778] },
+    { name: "Ar5", coords: [40.22211111111111, 28.86691666666667] },
+    { name: "Tıp Fakültesi", coords: [40.21977777777778, 28.86911111111111] },
+    { name: "Metro", coords: [40.21866666666667, 28.870055555555556] },
+    { name: "Uni+Sports", coords: [40.21897222222223, 28.865000000000002] },
+    { name: "Ar6", coords: [40.21938888888889, 28.862166666666667] },
+    { name: "Uü Derslik ve Merkez Birimler", coords: [40.22091666666667, 28.862083333333334] },
+    { name: "Rektörlük", coords: [40.221222222222224, 28.86763888888889] },
+    { name: "Ar7", coords: [40.22119444444445, 28.86213888888889] },
+    { name: "Daichii  Arge", coords: [40.22141666666667, 28.86038888888889] },
+    { name: "Ulutek", coords: [40.22280555555556, 28.85963888888889] },
+    { name: "Ar8", coords: [40.222, 28.86252777777778] },
+    { name: "Fen Fak", coords: [40.22255555555556, 28.863833333333336] },
+    { name: "Ar9", coords: [40.2235, 28.86552777777778] },
+    { name: "Mete Cengiz", coords: [40.22269444444445, 28.86638888888889] },
+    { name: "Ar10", coords: [40.21925, 28.8695] }
+];
+
+const adjacency = {
+    "üniversite ana giriş": {"Ar1": 200},
+    "Ar1": {"üniversite ana giriş": 200, "Uü Güzel Sanatlar Fakültesi": 250, "Ar2": 300},
+    "Uü Güzel Sanatlar Fakültesi": {"Ar1": 250, "Ar2": 220},
+    "Ar2": {"Uü Güzel Sanatlar Fakültesi": 220, "Ar3": 270, "Ar1": 300},
+    "Ar3": {"Ar2": 270, "Afet Acil Durum": 100, "Uü Camii": 200, "Ar10": 210},
+    "Uü Camii": {"Afet Acil Durum": 250, "Ar4": 200, "Ar3": 200},
+    "Ar4": {"Uü Camii": 200, "Göz Hastanesi": 180, "Ar5": 220},
+    "Göz Hastanesi": {"Ar4": 180, "Ar5": 220},
+    "Ar5": {"Göz Hastanesi": 220, "Mete Cengiz": 180, "Ar4": 220},
+    "Mete Cengiz": {"Ar5": 180, "Fen Fak": 140, "Ar9": 180},
+    "Fen Fak": {"Mete Cengiz": 140, "Ar8": 160},
+    "Ar8": {"Fen Fak": 160, "Uü Derslik ve Merkez Birimler": 170},
+    "Uü Derslik ve Merkez Birimler": {"Ar8": 170, "Ar6": 150},
+    "Ar6": {"Uü Derslik ve Merkez Birimler": 150, "Uni+Sports": 180, "Ar7": 200},
+    "Uni+Sports": {"Ar6": 180, "Metro": 160},
+    "Metro": {"Uni+Sports": 160, "Tıp Fakültesi": 150, "Ar10": 150},
+    "Tıp Fakültesi": {"Metro": 150, "Rektörlük": 250, "Ar10": 90},
+    "Rektörlük": {"Tıp Fakültesi": 250, "Ar9": 200},
+    "Ar9": {"Rektörlük": 200, "Mete Cengiz": 180},
+    "Daichii  Arge": {"Ar7": 180, "Ulutek": 180},
+    "Ar7": {"Daichii  Arge": 180, "Ar6": 200},
+    "Ulutek": {"Daichii  Arge": 180},
+    "Ar10": { "Tıp Fakültesi": 90, "Ar3": 210, "Metro": 150}
+};
+
+const startSelect = document.getElementById("startSelect");
+const endSelect = document.getElementById("endSelect");
+buildings.forEach(b => {
+    const opt1 = new Option(b.name, b.name);
+    const opt2 = new Option(b.name, b.name);
+    startSelect.add(opt1);
+    endSelect.add(opt2);
+});
+
+let routeLine = null;
+let activeMarkers = [];
+
+function showShortestPath() {
+    const start = startSelect.value;
+    const end = endSelect.value;
+    if (start === end) return alert("Başlangıç ve bitiş farklı olmalı");
+
+    const path = dijkstra(adjacency, start, end);
+    if (!path.length) return alert("Yol bulunamadı");
+
+    if (routeLine) map.removeLayer(routeLine);
+    activeMarkers.forEach(marker => map.removeLayer(marker));
+    activeMarkers = [];
+
+    const segmentGroup = L.layerGroup().addTo(map);
+    routeLine = segmentGroup;
+
+    let delay = 0;
+    for (let i = 0; i < path.length - 1; i++) {
+        const from = buildings.find(b => b.name === path[i]).coords;
+        const to = buildings.find(b => b.name === path[i + 1]).coords;
+        setTimeout(() => {
+            L.polyline([from, to], { color: 'red', weight: 5 }).addTo(segmentGroup);
+        }, delay);
+        delay += 500; // her adımı 0.5 saniye gecikmeyle çiz
+    }
+
+    [0, path.length - 1].forEach(i => {
+        const building = buildings.find(b => b.name === path[i]);
+        const marker = L.marker(building.coords)
+            .addTo(segmentGroup)
+            .bindTooltip(path[i], { permanent: true, direction: 'top', offset: [0, -10] });
+        activeMarkers.push(marker);
+    });
+
+    const latlngs = path.map(name => buildings.find(b => b.name === name).coords);
+    map.fitBounds(L.polyline(latlngs).getBounds());
+}
+
+function dijkstra(graph, start, end) {
+    const distances = {};
+    const previous = {};
+    const queue = new Set(Object.keys(graph));
+
+    for (let node of queue) {
+        distances[node] = Infinity;
+        previous[node] = null;
+    }
+    distances[start] = 0;
+
+    while (queue.size > 0) {
+        const current = [...queue].reduce((a, b) => distances[a] < distances[b] ? a : b);
+        queue.delete(current);
+
+        if (current === end) break;
+
+        for (let neighbor in graph[current]) {
+            const alt = distances[current] + graph[current][neighbor];
+            if (alt < distances[neighbor]) {
+                distances[neighbor] = alt;
+                previous[neighbor] = current;
+            }
+        }
+    }
+
+    const path = [];
+    let u = end;
+    while (u) {
+        path.unshift(u);
+        u = previous[u];
+    }
+    return path[0] === start ? path : [];
+}
+</script>
+
+<script>
+// 🔊 Sesli yönlendirme
+function speakPath(path) {
+    const utterance = new SpeechSynthesisUtterance("İzlenecek rota: " + path.join(" → "));
+utterance.rate = 0.8;
+    utterance.lang = "tr-TR";
+    speechSynthesis.speak(utterance);
+}
+
+// showShortestPath içine entegre edelim
+const originalShowShortestPath = showShortestPath;
+showShortestPath = function() {
+    const start = startSelect.value;
+    const end = endSelect.value;
+    if (start === end) return alert("Başlangıç ve bitiş farklı olmalı");
+    const path = dijkstra(adjacency, start, end);
+    if (!path.length) return alert("Yol bulunamadı");
+    speakPath(path); // sesli okuma
+    showStepList(path);
+    originalShowShortestPath();
+};
+function showStepList(path) {
+    const container = document.getElementById("stepList");
+    if (!container) return;
+    let html = "<b>Adım Adım Rota:</b><ol>";
+    for (let i = 0; i < path.length - 1; i++) {
+        html += `<li>${path[i]} → ${path[i + 1]}</li>`;
+    }
+    html += "</ol>";
+    container.innerHTML = html;
+}
+</script>
+</body>
+</html>
