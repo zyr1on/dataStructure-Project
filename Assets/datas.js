@@ -268,7 +268,7 @@ const adjacency =
         },
         "Ar22": { 
             "Ar11": { distance: 120, traffic: 1 }, 
-            "Ar23": { distance: 150, traffic: 5 } 
+            
         },
         "Ar23": {  
             "Eğitim Fak": { distance: 80, traffic: 6 },
