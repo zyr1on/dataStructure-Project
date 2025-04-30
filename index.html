@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Uludağ Üniversitesi - En Kısa Yol</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map { height: 90vh; }
+        #controls {
+            padding: 10px;
+            font-family: Arial;
+        }
+    </style>
+</head>
+<body>
+
+<div id="controls">
+    <label>Başlangıç:
+        <select id="startSelect"></select>
+    </label>
+    <label>Bitiş:
+        <select id="endSelect"></select>
+    </label>
+    <button onclick="showShortestPath()">Yolu Göster</button>
+</div>
+
+<div id="stepList" style="padding:10px; font-family:Arial; font-size:14px;"></div>
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="Assets/datas.js"></script>
+<script src="Assets/algorithm.js"></script>
+</script>
+</body>
+</html>
