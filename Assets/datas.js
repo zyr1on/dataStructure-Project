@@ -155,16 +155,16 @@ const adjacency =
         },
         "Uü Kütüphane": { 
             "Ar11": { distance: 150, traffic: 2 }, 
-            "David People": { distance: 80, traffic: 1 } 
+            "Ar12": { distance: 80, traffic: 1 } 
         },
         "David People": { 
-            "Uü Kütüphane": { distance: 80, traffic: 1 }, 
+             
             "Ar12": { distance: 50, traffic: 1 },
             "Ar14": { distance: 150, traffic: 4 }
         },
         "Ar12": { 
             "David People": { distance: 50, traffic: 1 }, 
-            "Ar14": { distance: 70, traffic: 2 } 
+            "Uü Kütüphane": { distance: 70, traffic: 2 } 
         },
         "Ar13": { 
             "Ar14": { distance: 40, traffic: 1 }, 
