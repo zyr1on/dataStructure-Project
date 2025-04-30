@@ -196,7 +196,8 @@ const adjacency =
         "Ar16": { 
             "Veterinerlik Fak": { distance: 300, traffic: 5 }, 
             "Endüstri Müh": { distance: 120, traffic: 4 },
-            "Ar17": { distance: 200, traffic: 2 }
+            "Ar17": { distance: 200, traffic: 2 },
+            "Mimarlık Fak":{ distance: 85, traffic: 4 }
         },
         "Endüstri Müh": { 
             "Ar16": { distance: 120, traffic: 4 }, 
@@ -205,11 +206,13 @@ const adjacency =
         },
         "Makina Müh": { 
             "Endüstri Müh": { distance: 80, traffic: 6 }, 
-            "Otomotiv Müh": { distance: 70, traffic: 4 } 
+            "Otomotiv Müh": { distance: 70, traffic: 4 },
+             "Mimarlık Fak": { distance: 70, traffic: 4 }
         },
         "Mimarlık Fak": { 
             "Endüstri Müh": { distance: 90, traffic: 3 }, 
-            "Makina topl.": { distance: 120, traffic: 5 } 
+            "Makina Müh": { distance: 70, traffic: 4 },
+            "Ar16":{ distance: 85, traffic: 4 }
         },
         "Otomotiv Müh": { 
             "Makina Müh": { distance: 70, traffic: 4 }, 
@@ -229,7 +232,7 @@ const adjacency =
         },
         "Makina topl.": { 
             "Çevre Müh": { distance: 60, traffic: 3 }, 
-            "Mimarlık Fak": { distance: 120, traffic: 5 }, 
+            
             "UET": { distance: 70, traffic: 4 } 
         },
         "UET": { 
@@ -269,7 +272,7 @@ const adjacency =
         },
         "Ar23": {  
             "Eğitim Fak": { distance: 80, traffic: 6 },
-            "Ar21": { distance: 80, traffic: 4 }
+            "Ar20": { distance: 80, traffic: 4 },"İnşaat Fak":{distance: 300, traffic: 4}
         },
         "Eğitim Fak": { 
             "Ar23": { distance: 80, traffic: 6 } 
