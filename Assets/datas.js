@@ -99,7 +99,7 @@ const buildings = [
 //         "Ar20": { "Elektrik Tekstil Bilgisayar Müh": 60, "Ar21": 50,"Ar23": 80},
 //         "Ar21": { "Ar20": 50, "Ar11": 100 },
 //         "Ar22": { "Ar11": 120, "Ar23": 150 },
-//         "Ar23": {  "Eğitim Fak": 80 ,"Ar20": 80},
+//         "Ar23": {  "Eğitim Fak": 80 ,"Ar20": 80,"İnşaat Fak":300},
 //         "Eğitim Fak": { "Ar23": 80 },
 //         "İnşaat Fak": { "Ar23": 300 },
 //         "üniversite ana giriş": { "Ar1": 200 },
