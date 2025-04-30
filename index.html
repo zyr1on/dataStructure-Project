@@ -6,15 +6,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
-        #map { height: 90vh; }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        #map { 
+            height: 80vh;   <!-- height düzenlenebilir burada, birazcık div bozuk çünkü-->
+        }
         #controls {
-            padding: 10px;
-            font-family: Arial;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+        #controls label {
+            margin-right: 15px;
+            font-weight: bold;
+        }
+        #controls select {
+            padding: 5px;
+            margin-right: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        #controls button {
+            padding: 6px 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #controls button:hover {
+            background-color: #0056b3;
+        }
+        #stepList {
+            padding: 15px;
+            font-size: 14px;
+            max-height: 20vh;
+            overflow-y: auto;
+            border-bottom: 1px solid #ddd;
+        }
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            font-size: 12px;
+        }
+        .legend-item {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+        }
+        .legend-color {
+            width: 20px;
+            height: 3px;
+            margin-right: 8px;
+        }
+        .route-info {
+            margin: 5px 0;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
-
 <div id="controls">
     <label>Başlangıç:
         <select id="startSelect"></select>
@@ -22,15 +85,30 @@
     <label>Bitiş:
         <select id="endSelect"></select>
     </label>
+    <label>Rota Tipi:
+        <select id="routeTypeSelect">
+            <option value="shortest">En Kısa Mesafe</option>
+            <option value="trafficAware">Trafik Yoğunluğuna Göre</option>
+        </select>
+    </label>
     <button onclick="showShortestPath()">Yolu Göster</button>
 </div>
-
-<div id="stepList" style="padding:10px; font-family:Arial; font-size:14px;"></div>
-<div id="map"></div>
-
+<div id="stepList"></div>
+<div id="map">
+    <div class="legend">
+        <h4 style="margin: 0 0 8px 0;">Rota Tipleri</h4>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: blue;"></div>
+            <span>En Kısa Mesafe</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: red; border-top: 1px dashed red;"></div>
+            <span>Trafik Yoğunluğuna Göre</span>
+        </div>
+    </div>
+</div>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script src="Assets/datas.js"></script>
 <script src="Assets/algorithm.js"></script>
-</script>
 </body>
 </html>
