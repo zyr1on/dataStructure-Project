@@ -453,11 +453,14 @@ const adjacency =
         }
     };
 
-// Eski algoritmanın kullanabilmesi için uyumluluk katmanı
-const legacyAdjacency = {};
-for (const source in adjacency) {
-    legacyAdjacency[source] = {};
-    for (const target in adjacency[source]) {
-        legacyAdjacency[source][target] = adjacency[source][target].distance;
+
+const trafficGraph = new Graph(true, true);
+const legacyGraph = new Graph(true, false);
+
+for (const from in adjacency) {
+    for (const to in adjacency[from]) {
+        const { distance, traffic } = adjacency[from][to];
+        trafficGraph.addEdge(from, to, distance, traffic);
+        legacyGraph.addEdge(from, to, distance);
     }
 }

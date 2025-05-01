@@ -44,9 +44,9 @@ function showShortestPath() {
     // Rota tipine göre yol bulma
     let path;
     if (routeType === "shortest") {
-        path = dijkstra(legacyAdjacency, start, end);
+        path = dijkstra(legacyGraph.getGraph(), start, end);
     } else if (routeType === "trafficAware") {
-        path = dijkstraTrafficAware(adjacency, start, end);
+        path = dijkstraTrafficAware(trafficGraph.getGraph(), start, end);
     }
 
     if (!path.length) return alert("Yol bulunamadı");
