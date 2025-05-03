@@ -65,8 +65,28 @@ function showShortestPath() {
     const lineColor = routeType === "shortest" ? 'blue' : 'red';
 
     // Yolları çiz
-    const routeCoords = path.map(name => buildings.find(b => b.name === name).coords);
-    routeLine = animateRoute(routeCoords, lineColor, routeType === "trafficAware");
+    for (let i = 0; i < path.length - 1; i++) {
+        const from = buildings.find(b => b.name === path[i]).coords;
+        const to = buildings.find(b => b.name === path[i + 1]).coords;
+
+        // Yol parçasını oluştur
+        setTimeout(() => {
+            // Rota tipine göre çizgi rengi ve kalınlığı seçimi
+            const line = L.polyline([from, to], {
+                color: lineColor,
+                weight: 5,
+                dashArray: routeType === "trafficAware" ? "5, 10" : null  // Trafik duyarlı rotada kesikli çizgi
+            }).addTo(segmentGroup);
+
+            // Trafiğe duyarlı rotada trafik yoğunluk bilgisini göster
+            if (routeType === "trafficAware") {
+                const segment = adjacency[path[i]][path[i + 1]];
+                const trafficInfo = getTrafficDescription(segment.traffic);
+                line.bindTooltip(`Mesafe: ${segment.distance}m, Trafik: ${trafficInfo}`);
+            }
+        }, delay);
+        delay += 300; // 300ms delay verildi burada
+    }
 
     // Başlangıç ve bitiş noktalarını işaretle
     [0, path.length - 1].forEach((i, index) => {
@@ -77,10 +97,7 @@ function showShortestPath() {
             iconSize: [15, 15],
             iconAnchor: [7, 7]
         });
-        const marker = L.marker(building.coords, { 
-            icon: markerIcon,
-            className: "animated-marker"
-         })
+        const marker = L.marker(building.coords, { icon: markerIcon })
             .addTo(segmentGroup)
             .bindTooltip(path[i], { permanent: true, direction: 'top', offset: [0, -10] });
         activeMarkers.push(marker);
@@ -313,32 +330,3 @@ function showStepOnAlertBox() {
     else
         alert("Rota bilgileri belirlenmedi. Lütfen rota belirleyiniz.");
 }
-
-function animateRoute(pathCoords, color, isDashed) {
-    const polyline = L.polyline([], {
-      color: color,
-      weight: 5,
-      dashArray: isDashed ? "5, 10" : "0",
-    }).addTo(map);
-  
-    let currentIndex = 0;
-    
-    const animationSpeed = 100;
-
-    const animateStep = () => {
-      if (currentIndex < pathCoords.length) {
-        polyline.addLatLng(pathCoords[currentIndex]);
-        currentIndex++;
-        setTimeout(animateStep, animationSpeed);
-      }
-    };
-    
-    animateStep();
-    return polyline;
-  }
-
-  routeLine = L.polyline(routeCoords, { 
-    color: lineColor, 
-    snake: true, 
-    speed: 200 
-  }).addTo(map);
