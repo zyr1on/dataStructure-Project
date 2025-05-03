@@ -337,7 +337,7 @@ function animateRoute(pathCoords, color, isDashed) {
     return polyline;
   }
 
-  routeLine = L.polyline(latlngs, { 
+  routeLine = L.polyline(routeCoords, { 
     color: lineColor, 
     snake: true, 
     speed: 200 
