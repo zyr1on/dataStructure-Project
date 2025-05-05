@@ -44,9 +44,9 @@ function showShortestPath() {
     // Rota tipine göre yol bulma
     let path;
     if (routeType === "shortest") {
-        path = dijkstra(legacyGraph.getGraph(), start, end);
+        path = dijkstra(legacyGraph.getGraph(), start, end); // algorithms.js de bulunan graph yapısı.
     } else if (routeType === "trafficAware") {
-        path = dijkstraTrafficAware(trafficGraph.getGraph(), start, end);
+        path = dijkstraTrafficAware(trafficGraph.getGraph(), start, end); // algorithms.js de bulunan graph yapısı, trafik katsayısı ile birlikte.
     }
 
     if (!path.length) return alert("Yol bulunamadı");
@@ -61,21 +61,21 @@ function showShortestPath() {
     routeLine = segmentGroup;
 
     let delay = 0;
-    // Renk seçimi
+    // kısa yol icin renk secimi
     const lineColor = routeType === "shortest" ? 'blue' : 'red';
 
-    // Yolları çiz
+    // yolları cizmek icin for döngüsü
     for (let i = 0; i < path.length - 1; i++) {
         const from = buildings.find(b => b.name === path[i]).coords;
         const to = buildings.find(b => b.name === path[i + 1]).coords;
 
-        // Yol parçasını oluştur
+        // yolun yavas yavas timeouta gore cizilmesi icin
         setTimeout(() => {
-            // Rota tipine göre çizgi rengi ve kalınlığı seçimi
+            // kalınlık seçimi
             const line = L.polyline([from, to], {
                 color: lineColor,
                 weight: 5,
-                dashArray: routeType === "trafficAware" ? "5, 10" : null  // Trafik duyarlı rotada kesikli çizgi
+                dashArray: routeType === "trafficAware" ? "5, 10" : null  // kesikli cizgi
             }).addTo(segmentGroup);
 
             // Trafiğe duyarlı rotada trafik yoğunluk bilgisini göster
