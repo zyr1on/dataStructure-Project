@@ -104,7 +104,7 @@ function heuristicFunction(node1, node2) {
 }
 
 // A* Algoritması implementasyonu
-function astar(graph, start, end, heuristic) {
+function astar(graph, start, end, heuristic) { 
     // Eğer heuristic fonksiyonu verilmemişse, varsayılan olarak 0 döndür
     heuristic = heuristic || (() => 0);
     
@@ -145,7 +145,7 @@ function astar(graph, start, end, heuristic) {
       closedSet.add(current);
       
       // Komşu düğümleri değerlendir
-      for (let neighbor in graph[current]) {
+      for (let neighbor in graph[current]) { // graph['A'] = { B: 5, C: 3 } komsular alınır.
         // İşlem görmüş düğümleri atla
         if (closedSet.has(neighbor)) continue;
         
