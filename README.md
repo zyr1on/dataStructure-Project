@@ -34,7 +34,7 @@
 # Algorithms and data structures
 <li>dijkstra</li>
 <li>A* by heuristicFunction </li>
-<p>------------------------</p>
+<p>----------------------------</p>
 <li>Queue</li>
 <li>PriorityQueue</li>
 <li>Graph</li>
