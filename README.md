@@ -1,5 +1,9 @@
 # dataStructure-Project
 
+# 
+Language: Javascript
+Data: OpenStreetMap
+
 ## TODO
 
 - [x] Add University Map implementation by openstreetmap
@@ -26,7 +30,7 @@
 - [x] add benchmark test for each algoritm
   - [x] show benchmark result as a alertbox via button
 
-# LIBRARYS
+# LIBRARYS and DATAS
 <li>leaflet</li>
 <li>tile.openstreetmap</li>
 <li>SpeechSynthesisUtterance</li>
