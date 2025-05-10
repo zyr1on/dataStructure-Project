@@ -15,3 +15,5 @@ Graph<br>
 Array<br>
 Object<br>
 
+- [ ] Yapılacak iş 1
+- [x] Tamamlanan iş 2
