@@ -27,15 +27,17 @@
   - [x] show benchmark result as a alertbox via button
 
 # LIBRARYS
-<br>
 <li>leaflet</li>
 <li>tile.openstreetmap</li>
 <li>SpeechSynthesisUtterance</li>
 
 # Algorithms and data structures
 <li>dijkstra</li>
+<li>A* by heuristicFunction </li>
+<p>------------------------</p>
 <li>Queue</li>
-<li>Set</li>
+<li>PriorityQueue</li>
 <li>Graph</li>
+<li>Set</li>
 <li>Array</li>
-<li>Object</li>
+
