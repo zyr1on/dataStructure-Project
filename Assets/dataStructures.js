@@ -51,50 +51,6 @@ class Queue {
     }
 }
 
-
-class PriorityQueue {
-    constructor() {
-        this.nodes = [];
-        this.priorities = {};
-    }
-    
-    enqueue(node, priority) {
-        this.nodes.push(node);
-        this.priorities[node] = priority;
-    }
-    
-    dequeue() {
-        if (this.isEmpty()) return null;
-        
-        let bestPriority = Infinity;
-        let bestIndex = -1;
-        
-        for (let i = 0; i < this.nodes.length; i++) {
-            const priority = this.priorities[this.nodes[i]];
-            if (priority < bestPriority) {
-                bestPriority = priority;
-                bestIndex = i;
-            }
-        }
-        
-        const bestNode = this.nodes[bestIndex];
-        this.nodes.splice(bestIndex, 1);
-        return bestNode;
-    }
-    
-    contains(node) {
-        return this.nodes.includes(node);
-    }
-    
-    updatePriority(node, priority) {
-        this.priorities[node] = priority;
-    }
-    
-    isEmpty() {
-        return this.nodes.length === 0;
-    }
-}
-
 class Graph {
     constructor(weighted = false, trafficAware = false) {
         this.nodes = new Set();
