@@ -1,3 +1,7 @@
+proje linki: https://github.com/zyr1on/dataStructure-Project<br>
+projenin backend eklenmiş hali: https://github.com/ahsayilmaz/CampusNavigation<br>
+proje domain: <a href="campusnavigation.up.railway.app">campusnavigation</a><br>
+
 # Bursa Uludağ Üniversitesi Yolları Görselleştirme ve Dijkstra Algoritması
 
 ![Language: Javascript](https://img.shields.io/badge/Language-Javascript-yellow.svg)
@@ -103,18 +107,26 @@ Dijkstra algoritması, ağırlıklı bir grafikteki başlangıç düğümünden 
 5.  Bitiş düğümü ziyaret edilene veya tüm erişilebilir düğümler işlenene kadar bu adımlar tekrarlanır.
 6.  En kısa yol, geriye doğru izlenerek (previous düğümleri kullanılarak) oluşturulur.
 
-**Algoritma Karmaşıklığı:**
+# Dijkstra Algoritması Zaman Karmaşıklığı
 
+Dijkstra algoritması, bir kaynaktan diğer tüm düğümlere en kısa yolları bulur. Eğer algoritma bir **Priority Queue** (min-heap) kullanıyorsa, zaman karmaşıklığı şu şekilde hesaplanır:
 
-* **Küme (basit uygulama):** $\mathcal{O}(V^2 + E)$ burada $V$ düğüm sayısı ve $E$ kenar sayısıdır.
+Her adımda:
+- **Kuyruğa Eleman Eklemek**: `O(log V)`
+- **Kuyruğun En Küçük Elemanını Çıkarmak**: `O(log V)`
+- **Mesafe Güncelleme**: `O(log V)`
 
-**Kullanılan Veri Yapıları:**
+Bu işlemler her düğüm ve kenar için yapılır. Bu nedenle, toplam zaman karmaşıklığı şu şekilde hesaplanır:
 
-* **`distances` nesnesi:** Her düğüme olan en kısa mesafeyi saklar.
-* **`previous` nesnesi:** En kısa yolda bir önceki düğümü saklar. Bu, en kısa yolu yeniden oluşturmak için kullanılır.
-* **`queue` (Öncelik Kuyruğu):** Ziyaret edilecek düğümleri, mevcut en kısa mesafeye göre sıralı tutar. Algoritmanın verimliliği için kritik bir veri yapısıdır. Basit bir dizi kullanıldığında $\mathcal{O}(V)$ zaman alır, ancak ikili yığın veya Fibonacci yığını kullanılarak bu süre optimize edilebilir.
+$$
+O((V + E) \cdot \log V)
+$$
 
-Bu özet, algoritmanın temel işleyişini, karmaşıklığını ve kullandığı ana veri yapılarını anlamanıza yardımcı olacaktır.
+Burada:
+- **V**: Düğümlerin sayısı
+- **E**: Kenarların sayısı
+
+Bu karmaşıklık, **Priority Queue** kullanarak Dijkstra algoritmasının genel verimliliğini artırır ve büyük graf yapılarında performans sağlar.
 
 
 
@@ -122,17 +134,18 @@ Bu özet, algoritmanın temel işleyişini, karmaşıklığını ve kullandığ�
 ```js
 benchmarkdijkstra(adjacency,"Ar1","Uü Kütüphane");
 ```
-| İterasyonlar   |      1000 |
-|--------------  |-----------|
-| Max Zaman      | 0.3000 ms |
-| Ortalama Zaman | 0.0269 ms |
-| Standart Sapma | 0.0493 ms |
+| Dijkstra          | İterasyonlar | Max Zaman (ms) | Ortalama Zaman (ms) | Standart Sapma (ms) |
+|----------------|--------------|----------------|---------------------|---------------------|
+| **Ar1-Uü Kütüphane**      | 1000         | 0.3000         | 0.0269              | 0.0493              |
+| **üniversite ana giriş-Çıkış**      | 1000         | 0.4000         | 0.0147              | 0.0414              |
+| **Yurtlar Bölg-Metro**      | 1000         | 0.4000         | 0.0226              | 0.0483              |
+
 ## Priority Queue Benchmark Sonuçları
 ```js
 const pq = new PriorityQueue();
 benchmarkPriorityQueue(pq, 1000);
 ```
-| İşlem          | İterasyonlar | Max Zaman (ms) | Ortalama Zaman (ms) | Standart Sapma (ms) |
+| PriorityQueue          | İterasyonlar | Max Zaman (ms) | Ortalama Zaman (ms) | Standart Sapma (ms) |
 |----------------|--------------|----------------|---------------------|---------------------|
 | **Enqueue**    | 1000         | 0.1000         | 0.0003              | 0.0055              |
 | **Dequeue**    | 1000         | 0.1000         | 0.0006              | 0.0077              |
