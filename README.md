@@ -67,6 +67,28 @@ Projeyi çalıştırabilmek için aşağıdaki adımları izleyebilirsiniz:
 <li>Array</li>
 
 
+# PriorityQueue (Min-Heap)
+
+Bu proje, JavaScript diliyle yazılmış dinamik boyutlu bir min-heap tabanlı öncelik kuyruğu veri yapısını içerir.
+
+## Özellikler
+
+- Dinamik olarak büyüyebilen iç dizi
+- Önceliğe göre otomatik sıralama (küçük değer daha yüksek öncelikli)
+- `decreaseKey()` fonksiyonu ile Dijkstra gibi algoritmalarda kullanılabilir
+
+## API
+
+| Fonksiyon       | Açıklama                                                        | Zaman Karmaşıklığı |
+|----------------|------------------------------------------------------------------|---------------------|
+| `enqueue(node, priority)` | Yeni bir eleman kuyruğa ekler                                  | O(log n)            |
+| `dequeue()`     | En düşük öncelikli elemanı kuyruktan çıkarır                    | O(log n)            |
+| `decreaseKey(node, newPriority)` | Var olan bir elemanın önceliğini düşürür               | O(n) + O(log n)     |
+| `isEmpty()`     | Kuyruk boş mu kontrol eder                                      | O(1)                |
+| `print()`       | Kuyruktaki tüm elemanları bir dizi olarak döndürür              | O(n)                |
+
+
+
 
 ## Dijkstra Algoritması
 
