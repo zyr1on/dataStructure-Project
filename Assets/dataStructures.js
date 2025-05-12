@@ -157,39 +157,4 @@ class Graph {
 }
 
 
-class Graph {
-    constructor(weighted = false, trafficAware = false) {
-        this.nodes = new Set();
-        this.edges = {};
-        this.weighted = weighted;
-        this.trafficAware = trafficAware;
-    }
 
-    addNode(node) {
-        this.nodes.add(node);
-        if (!this.edges[node]) {
-            this.edges[node] = {};
-        }
-    }
-
-    addEdge(from, to, distance, traffic = 0) {
-        this.addNode(from);
-        this.addNode(to);
-
-        if (this.trafficAware) {
-            this.edges[from][to] = { distance, traffic };
-        } else if (this.weighted) {
-            this.edges[from][to] = distance;
-        } else {
-            this.edges[from][to] = 1;
-        }
-    }
-
-    getNeighbors(node) {
-        return this.edges[node] || {};
-    }
-
-    getGraph() {
-        return this.edges;
-    }
-}
