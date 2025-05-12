@@ -117,3 +117,27 @@ Dijkstra algoritması, ağırlıklı bir grafikteki başlangıç düğümünden 
 Bu özet, algoritmanın temel işleyişini, karmaşıklığını ve kullandığı ana veri yapılarını anlamanıza yardımcı olacaktır.
 
 
+
+## Dijkstra Benchmark Sonuçları
+```js
+benchmarkdijkstra(adjacency,"Ar1","Uü Kütüphane");
+```
+| İterasyonlar   |      1000 |
+|--------------  |-----------|
+| Max Zaman      | 0.3000 ms |
+| Ortalama Zaman | 0.0269 ms |
+| Standart Sapma | 0.0493 ms |
+## Priority Queue Benchmark Sonuçları
+```js
+const pq = new PriorityQueue();
+benchmarkPriorityQueue(pq, 1000);
+```
+| İşlem          | İterasyonlar | Max Zaman (ms) | Ortalama Zaman (ms) | Standart Sapma (ms) |
+|----------------|--------------|----------------|---------------------|---------------------|
+| **Enqueue**    | 1000         | 0.1000         | 0.0003              | 0.0055              |
+| **Dequeue**    | 1000         | 0.1000         | 0.0006              | 0.0077              |
+| **SiftUp**     | 1000         | 0.1000         | 0.0003              | 0.0055              |
+| **SiftDown**   | 1000         | 0.0000         | 0.0000              | 0.0000              |
+| **DecreaseKey**| 1000         | 0.1000         | 0.0002              | 0.0045              |
+
+
