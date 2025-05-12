@@ -1,73 +1,102 @@
-// Trafik yoğunluğunu dikkate almayan klasik Dijkstra algoritması
 function dijkstra(graph, start, end) {
     const distances = {};
     const previous = {};
-    const queue = new Queue();
+    const pq = new PriorityQueue();
+
     for (let node in graph) {
-        distances[node] = Infinity;
+        if (node === start) {
+            distances[node] = 0; // ilk node için uzaklık sıfır yapıyoruz.
+            pq.enqueue(node, 0);
+        } else {
+            distances[node] = Infinity; // diger nodelar için uzaklık sonsuz yapıyoruz.
+            pq.enqueue(node, Infinity);
+        }
         previous[node] = null;
-        queue.enqueue(node);
     }
-    distances[start] = 0;
-
-    while (!queue.isEmpty()) {
-        const current = queue.toArray().reduce((a, b) => distances[a] < distances[b] ? a : b);
-        queue.delete(current);
+    
+    // Ana döngü
+    while (!pq.isEmpty()) {
+        const { node: current } = pq.dequeue(); // şimdi olan node dequeue yap
+        
         if (current === end) break;
-
+        
+        // her komşu için kontrol yapılıyor
         for (let neighbor in graph[current]) {
             const alt = distances[current] + graph[current][neighbor];
+            
             if (alt < distances[neighbor]) {
                 distances[neighbor] = alt;
-                previous[neighbor] = current;
+                previous[neighbor] = current;        
+                pq.decreaseKey(neighbor, alt);
             }
         }
     }
-
+    
     const path = [];
-    let u = end;
-    while (u) {
-        path.unshift(u);
-        u = previous[u];
+    let current = end;
+    
+    // Yolu geri doğru izleriz
+    while (current) 
+    {
+        path.unshift(current);
+        current = previous[current];
     }
+    
+    // Start noktasından end noktasına bir yol var mı?
     return path[0] === start ? path : [];
 }
+
+
 function dijkstraTrafficAware(graph, start, end) {
     const distances = {};
     const previous = {};
-    const queue_ = new Queue();
-
+    const pq = new PriorityQueue();
+    
     for (let node in graph) {
-        distances[node] = Infinity;
+        if (node === start) {
+            distances[node] = 0;
+            pq.enqueue(node, 0);
+        } else {
+            distances[node] = Infinity;
+            pq.enqueue(node, Infinity);
+        }
         previous[node] = null;
-        queue_.enqueue(node);
     }
-    distances[start] = 0;
+    
 
-    while (!queue_.isEmpty()) {
-        const current = queue_.toArray().reduce((a, b) => distances[a] < distances[b] ? a : b);
-        queue_.delete(current);
-
+    while (!pq.isEmpty()) {
+        const { node: current } = pq.dequeue();
+        
+        // Son noktaya ulaştıysak döngüden çık
         if (current === end) break;
-
+        
+        // Her komşu için kontrol et
         for (let neighbor in graph[current]) {
             const segment = graph[current][neighbor];
+            // Trafik durumunu dikkate alarak ağırlıklı mesafeyi hesapla
             const weightedDistance = segment.distance * (1 + segment.traffic / 3);
             const alt = distances[current] + weightedDistance;
+            
+            // Daha kısa bir yol bulduk mu?
             if (alt < distances[neighbor]) {
                 distances[neighbor] = alt;
                 previous[neighbor] = current;
+                
+                // Öncelik kuyruğunda güncelleştir
+                pq.decreaseKey(neighbor, alt);
             }
         }
     }
-
+    
     const path = [];
-    let u = end;
-    while (u) {
-        path.unshift(u);
-        u = previous[u];
+    let current = end;
+    
+    while (current) {
+        path.unshift(current);
+        current = previous[current];
     }
-
+    
+    // Start noktasından end noktasına bir yol var mı?
     return path[0] === start ? path : [];
 }
 
