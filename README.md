@@ -22,6 +22,7 @@ Proje, **OpenStreetMap**'ten alınan harita verilerini kullanarak, çeşitli ver
 ## Başlangıç
 
 Projeyi çalıştırabilmek için aşağıdaki adımları izleyebilirsiniz:
+Zip dosyasını indirip index.html açarak da kolay bir yoldan projeye ulaşabilirsiniz.
 
 ### Gereksinimler
 - Web tarayıcısı
