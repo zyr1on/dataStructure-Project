@@ -75,12 +75,6 @@
             border-radius: 4px;
             font-size: 13px;
         }
-        #algorithmSelect, #subalgorithmSelect {
-            padding: 5px;
-            margin-right: 5px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
         .hidden {
             display: none;
         }
@@ -94,12 +88,7 @@
     <label>Bitiş:
         <select id="endSelect"></select>
     </label>
-    <label>Algoritma:
-        <select id="algorithmSelect" onchange="toggleAlgorithmOptions()">
-            <option value="dijkstra">Dijkstra</option>
-            <option value="astar">A* (A-Star)</option>
-        </select>
-    </label>
+    <label>Algoritma: Dijkstra</label>
     <label>Rota Tipi:
         <select id="routeTypeSelect">
             <option value="shortest">En Kısa Mesafe</option>
@@ -121,14 +110,6 @@
             <div class="legend-color" style="background-color: red; border-top: 1px dashed red;"></div>
             <span>Trafik Yoğunluğuna Göre (Dijkstra)</span>
         </div>
-        <div class="legend-item">
-            <div class="legend-color" style="background-color: green;"></div>
-            <span>En Kısa Mesafe (A*)</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-color" style="background-color: purple; border-top: 1px dashed purple;"></div>
-            <span>Trafik Yoğunluğuna Göre (A*)</span>
-        </div>
     </div>
 </div>
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -137,6 +118,5 @@
 <script src="Assets/datas.js"></script>
 <script src="Assets/pathAlgorithms.js"></script>
 <script src="Assets/ui.js"></script>
-<script src="script.js"></script>
 </body>
 </html>
