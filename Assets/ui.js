@@ -17,8 +17,6 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 const startSelect = document.getElementById("startSelect");
 const endSelect = document.getElementById("endSelect");
 const routeTypeSelect = document.getElementById("routeTypeSelect");
-const algorithmSelect = document.getElementById("algorithmSelect");
-const dijkstraOptionsLabel = document.getElementById("dijkstraOptionsLabel");
 
 // Binaları selectlere ekleme
 buildings.forEach(b => {
@@ -35,44 +33,25 @@ let routeLine = null;
 let activeMarkers = [];
 let pathHistory = {}; // Her rota tipine göre son gösterilen yolu saklamak için
 
-// Bu fonksiyonu HTML'i değiştirince kaldırdık
-function toggleAlgorithmOptions() {
-    // Rota tipi seçenekleri her algoritma için gösteriliyor
-}
-
-
-
-
 // Ana rota gösteren fonksiyon
 function showPath() {
     const start = startSelect.value;
     const end = endSelect.value;
-    const algorithm = algorithmSelect.value;
     const routeType = routeTypeSelect.value;
     
     if (start === end) return alert("Başlangıç ve bitiş farklı olmalı");
     
-    // Algoritma seçimine göre yol bulma
+    // Dijkstra algoritması ile yol bulma
     let path;
     let routeColor;
-    let pathKey = `${algorithm}_${routeType}`;
+    let pathKey = `dijkstra_${routeType}`;
     
-    if (algorithm === "dijkstra") {
-        if (routeType === "shortest") {
-            path = dijkstra(legacyGraph.getGraph(), start, end);
-            routeColor = 'blue';
-        } else if (routeType === "trafficAware") {
-            path = dijkstraTrafficAware(trafficGraph.getGraph(), start, end);
-            routeColor = 'red';
-        }
-    } else if (algorithm === "astar") {
-        if (routeType === "shortest") {
-            path = astar(legacyGraph.getGraph(), start, end, heuristicFunction);
-            routeColor = 'green';
-        } else if (routeType === "trafficAware") {
-            path = astarTrafficAware(trafficGraph.getGraph(), start, end, heuristicFunction);
-            routeColor = 'purple';
-        }
+    if (routeType === "shortest") {
+        path = dijkstra(legacyGraph.getGraph(), start, end);
+        routeColor = 'blue';
+    } else if (routeType === "trafficAware") {
+        path = dijkstraTrafficAware(trafficGraph.getGraph(), start, end);
+        routeColor = 'red';
     }
     
     if (!path || !path.length) return alert("Yol bulunamadı");
@@ -142,20 +121,15 @@ function showPath() {
     map.fitBounds(L.polyline(latlngs).getBounds());
     
     // Rotayı sesli oku
-    speakPath(path, algorithm, routeType);
+    speakPath(path, routeType);
     
     // Adım bilgisi hazırla
     stepText = "";
-    showStepListAlert(path, algorithm, routeType);
+    showStepListAlert(path, routeType);
     
     // Bu rotayı geçmişte sakla
-    pathHistory[`${algorithm}_${routeType}`] = path;
+    pathHistory[pathKey] = path;
 }
-
-
-// PriorityQueue sınıfı tanımı (A* için)
-
-
 
 // Trafik yoğunluğunu metin olarak açıkla
 function getTrafficDescription(trafficValue) {
@@ -166,14 +140,8 @@ function getTrafficDescription(trafficValue) {
 }
 
 // Rotayı sesli okuma fonksiyonu
-function speakPath(path, algorithm, routeType) {
-    let routeDesc = "";
-    
-    if (routeType === "shortest") {
-        routeDesc = algorithm === "dijkstra" ? "Dijkstra en kısa" : "A-Star en kısa";
-    } else {
-        routeDesc = algorithm === "dijkstra" ? "Dijkstra trafik duyarlı" : "A-Star trafik duyarlı";
-    }
+function speakPath(path, routeType) {
+    let routeDesc = routeType === "shortest" ? "Dijkstra en kısa" : "Dijkstra trafik duyarlı";
 
     // 'ar' regex filtreleme
     const filteredPath = path.filter(step => !step.includes("Ar"));
@@ -185,16 +153,13 @@ function speakPath(path, algorithm, routeType) {
 }
 
 // Karşılaştırma için adım bilgilerini hazırla
-function showStepListAlert(path, algorithm, routeType) {
-    // Mevcut rotanın algoritma türünü ve adını belirle
-    const currentPathKey = `${algorithm}_${routeType}`;
-    let currentRouteName = "";
+function showStepListAlert(path, routeType) {
+    // 'Ar' olmadan rota
+    const filteredPath = path.filter(step => !step.includes("Ar"));
     
-    if (algorithm === "dijkstra") {
-        currentRouteName = routeType === "shortest" ? "En Kısa Rota (Dijkstra)" : "Trafik Duyarlı Rota (Dijkstra)";
-    } else if (algorithm === "astar") {
-        currentRouteName = routeType === "shortest" ? "En Kısa Rota (A*)" : "Trafik Duyarlı Rota (A*)";
-    }
+    // Mevcut rotanın algoritma türünü ve adını belirle
+    const currentPathKey = `dijkstra_${routeType}`;
+    let currentRouteName = routeType === "shortest" ? "En Kısa Rota" : "Trafik Duyarlı Rota";
     
     // Mevcut rotanın toplam mesafesini hesapla
     let currentRouteDistance = 0;
@@ -206,47 +171,45 @@ function showStepListAlert(path, algorithm, routeType) {
         }
     }
     
-    // Karşılaştırma metni oluştur
-    stepText = `${currentRouteName}: ${currentRouteDistance}m\n\n`;
+    // Diğer rota tipini belirle
+    const otherType = routeType === "shortest" ? "trafficAware" : "shortest";
+    const otherName = otherType === "shortest" ? "En Kısa Rota" : "Trafik Duyarlı Rota";
     
-    // Diğer algoritmaların rota bilgilerini ekle (eğer daha önce hesaplanmışsa)
-    const otherPaths = {
-        "dijkstra_shortest": "En Kısa Rota (Dijkstra)",
-        "dijkstra_trafficAware": "Trafik Duyarlı Rota (Dijkstra)",
-        "astar_shortest": "En Kısa Rota (A*)",
-        "astar_trafficAware": "Trafik Duyarlı Rota (A*)"
-    };
+    // Diğer rota için hesaplama
+    let otherPath, otherRouteDistance;
+    if (otherType === "shortest") {
+        otherPath = dijkstra(legacyGraph.getGraph(), path[0], path[path.length - 1]);
+    } else {
+        otherPath = dijkstraTrafficAware(trafficGraph.getGraph(), path[0], path[path.length - 1]);
+    }
     
-    // Tüm rota türlerini kontrol et
-    for (const [pathKey, pathName] of Object.entries(otherPaths)) {
-        // Kendimizi karşılaştırmaya eklemeyelim
-        if (pathKey === currentPathKey) continue;
-        
-        // Bu rota daha önce hesaplanmış mı?
-        if (pathHistory[pathKey]) {
-            let otherDistance = 0;
-            const otherPath = pathHistory[pathKey];
-            
-            // Toplam mesafeyi hesapla
-            for (let i = 0; i < otherPath.length - 1; i++) {
-                if (pathKey.includes("_shortest")) {
-                    otherDistance += legacyGraph.getGraph()[otherPath[i]][otherPath[i + 1]];
-                } else {
-                    otherDistance += trafficGraph.getGraph()[otherPath[i]][otherPath[i + 1]].distance;
-                }
-            }
-            
-            // Farkı hesapla
-            const diff = currentRouteDistance - otherDistance;
-            const diffText = diff > 0 
-                ? `${Math.abs(diff)}m daha uzun` 
-                : diff < 0 
-                    ? `${Math.abs(diff)}m daha kısa` 
-                    : "aynı uzunlukta";
-                    
-            stepText += `${pathName}: ${otherDistance}m - ${diffText}\n\n`;
+    // Diğer rotanın mesafesini hesapla
+    otherRouteDistance = 0;
+    for (let i = 0; i < otherPath.length - 1; i++) {
+        if (otherType === "shortest") {
+            otherRouteDistance += legacyGraph.getGraph()[otherPath[i]][otherPath[i + 1]];
+        } else {
+            otherRouteDistance += trafficGraph.getGraph()[otherPath[i]][otherPath[i + 1]].distance;
         }
     }
+    
+    // 'Ar' içermeyen rotaları filtrele
+    const filteredOtherPath = otherPath.filter(step => !step.includes("Ar"));
+    
+    // Farkı hesapla
+    const diff = currentRouteDistance - otherRouteDistance;
+    const diffText = diff > 0 
+        ? `${Math.abs(diff).toFixed(2)} metre daha uzun` 
+        : diff < 0 
+            ? `${Math.abs(diff).toFixed(2)} metre daha kısa` 
+            : "aynı uzunlukta";
+    
+    // Karşılaştırma metni oluştur
+    stepText = `${currentRouteName}: ${currentRouteDistance.toFixed(2)} metre\n`;
+    stepText += `\nİzlenen Rota:\n${filteredPath.join(' → ')}`;
+    stepText += "\n-----------------------------------------------------------------------------\n"
+    stepText += `${otherName}: ${otherRouteDistance.toFixed(2)} metre (${diffText})\n`;
+    stepText += `\nDiğer Rotanın Yolu:\n${filteredOtherPath.join(' → ')}`;
     
     // Konsola yazdır
     console.log(stepText);
@@ -260,28 +223,30 @@ function showStepOnAlertBox() {
         alert("Rota bilgileri belirlenmedi. Lütfen rota belirleyiniz.");
 }
 
-
+// Detayları alert box'ta göster
+function showStepOnAlertBox() {
+    if(stepText)
+        alert(stepText);
+    else
+        alert("Rota bilgileri belirlenmedi. Lütfen rota belirleyiniz.");
+}
 
 function updateUI() {
-    // Performans karşılaştırma butonu oluştur
-    const compareButton = document.createElement('button');
-    compareButton.id = 'compareButton';
-    compareButton.className = 'btn btn-warning';
-    compareButton.innerHTML = 'Algoritmaları Karşılaştır';
-    compareButton.onclick = compareAlgorithmPerformance;
+    // Performans butonu oluştur
+    const performanceButton = document.createElement('button');
+    performanceButton.id = 'performanceButton';
+    performanceButton.className = 'btn btn-warning';
+    performanceButton.innerHTML = 'Performans Ölç';
+    performanceButton.onclick = measureDijkstraPerformance;
     
     // Butonu uygun yere ekle - "Rota Göster" butonunun yanına
-    const showPathButton = document.querySelector('button'); // İlk buton muhtemelen "Rota Göster" butonu
+    const showPathButton = document.querySelector('button'); 
     if (showPathButton && showPathButton.parentNode) {
-        showPathButton.parentNode.appendChild(compareButton);
+        showPathButton.parentNode.appendChild(performanceButton);
     }
 }
 
-
-
-
-// Sayfa yüklendiğinde algoritma seçeneklerini ayarla
+// Sayfa yüklendiğinde UI'ı güncelle
 document.addEventListener('DOMContentLoaded', function() {
-    toggleAlgorithmOptions();
     updateUI();
 });
