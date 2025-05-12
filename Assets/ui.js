@@ -206,9 +206,9 @@ function showStepListAlert(path, routeType) {
     
     // Karşılaştırma metni oluştur
     stepText = `${currentRouteName}: ${currentRouteDistance.toFixed(2)} metre\n`;
-    stepText += `\nİzlenen Rota:\n${filteredPath.join(' → ')}`;
-    stepText += "\n-----------------------------------------------------------------------------\n"
-    stepText += `${otherName}: ${otherRouteDistance.toFixed(2)} metre (${diffText})\n`;
+    stepText += `İzlenen Rota:\n${filteredPath.join(' → ')}\n`;
+    stepText += "---------------------------------------------------------------------\n"
+    stepText += `${otherName}: ${otherRouteDistance.toFixed(2)} metre (${diffText})`;
     stepText += `\nDiğer Rotanın Yolu:\n${filteredOtherPath.join(' → ')}`;
     
     // Konsola yazdır
