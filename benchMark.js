@@ -117,3 +117,80 @@ function benchmarkPriorityQueue(queue, iterations = 1000) {
         decreaseKey: calculateStats(decreaseKeyTimes),
     };
 }
+
+
+function benchmarkGraph(graph, iterations = 1000) {
+    const addNodeTimes = [];
+    const addEdgeTimes = [];
+    const getNeighborsTimes = [];
+    
+    let totalAddNodeTime = 0;
+    let totalAddEdgeTime = 0;
+    let totalGetNeighborsTime = 0;
+    
+    let minAddNodeTime = Infinity;
+    let maxAddNodeTime = -Infinity;
+    
+    let minAddEdgeTime = Infinity;
+    let maxAddEdgeTime = -Infinity;
+    
+    let minGetNeighborsTime = Infinity;
+    let maxGetNeighborsTime = -Infinity;
+
+    for (let i = 0; i < iterations; i++) {
+        // Measure addNode time
+        const addNodeStart = performance.now();
+        graph.addNode(`node${i}`);
+        const addNodeEnd = performance.now();
+        const addNodeTime = addNodeEnd - addNodeStart;
+        addNodeTimes.push(addNodeTime);
+        totalAddNodeTime += addNodeTime;
+        minAddNodeTime = Math.min(minAddNodeTime, addNodeTime);
+        maxAddNodeTime = Math.max(maxAddNodeTime, addNodeTime);
+
+        // Measure addEdge time
+        const addEdgeStart = performance.now();
+        graph.addEdge(`node${i}`, `node${i+1}`, 10);
+        const addEdgeEnd = performance.now();
+        const addEdgeTime = addEdgeEnd - addEdgeStart;
+        addEdgeTimes.push(addEdgeTime);
+        totalAddEdgeTime += addEdgeTime;
+        minAddEdgeTime = Math.min(minAddEdgeTime, addEdgeTime);
+        maxAddEdgeTime = Math.max(maxAddEdgeTime, addEdgeTime);
+
+        // Measure getNeighbors time
+        const getNeighborsStart = performance.now();
+        graph.getNeighbors(`node${i}`);
+        const getNeighborsEnd = performance.now();
+        const getNeighborsTime = getNeighborsEnd - getNeighborsStart;
+        getNeighborsTimes.push(getNeighborsTime);
+        totalGetNeighborsTime += getNeighborsTime;
+        minGetNeighborsTime = Math.min(minGetNeighborsTime, getNeighborsTime);
+        maxGetNeighborsTime = Math.max(maxGetNeighborsTime, getNeighborsTime);
+    }
+
+    // Calculate mean and standard deviation for each operation
+    function calculateStandardDeviation(times, meanTime) {
+        const variance = times.reduce((sum, time) => sum + Math.pow(time - meanTime, 2), 0) / iterations;
+        return Math.sqrt(variance);
+    }
+
+    const meanAddNodeTime = totalAddNodeTime / iterations;
+    const stddevAddNodeTime = calculateStandardDeviation(addNodeTimes, meanAddNodeTime);
+
+    const meanAddEdgeTime = totalAddEdgeTime / iterations;
+    const stddevAddEdgeTime = calculateStandardDeviation(addEdgeTimes, meanAddEdgeTime);
+
+    const meanGetNeighborsTime = totalGetNeighborsTime / iterations;
+    const stddevGetNeighborsTime = calculateStandardDeviation(getNeighborsTimes, meanGetNeighborsTime);
+
+    // Print results
+    console.log(`Benchmark Results (averages over ${iterations} iterations):`);
+    console.log(`addNode Average Time: ${meanAddNodeTime.toFixed(6)} ms`);
+    console.log(`addEdge Average Time: ${meanAddEdgeTime.toFixed(6)} ms`);
+    console.log(`getNeighbors Average Time: ${meanGetNeighborsTime.toFixed(6)} ms`);
+    console.log(`\naddNode - Min Time: ${minAddNodeTime.toFixed(6)} ms, Max Time: ${maxAddNodeTime.toFixed(6)} ms, StdDev: ${stddevAddNodeTime.toFixed(6)} ms`);
+    console.log(`addEdge - Min Time: ${minAddEdgeTime.toFixed(6)} ms, Max Time: ${maxAddEdgeTime.toFixed(6)} ms, StdDev: ${stddevAddEdgeTime.toFixed(6)} ms`);
+    console.log(`getNeighbors - Min Time: ${minGetNeighborsTime.toFixed(6)} ms, Max Time: ${maxGetNeighborsTime.toFixed(6)} ms, StdDev: ${stddevGetNeighborsTime.toFixed(6)} ms`);
+
+}
