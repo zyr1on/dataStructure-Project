@@ -40,7 +40,9 @@ Zip dosyasını indirip index.html açarak da kolay bir yoldan projeye ulaşabil
 
 ## TODO
 
+- [x] test html page
 - [x] Add University Map implementation by openstreetmap
+- [x] Add leaflet
 - [x] Limit map zoom and bounds
 - [x] Add Queue,Stack and Graph Data Structues
 - [x] Test map for nodes
@@ -48,7 +50,6 @@ Zip dosyasını indirip index.html açarak da kolay bir yoldan projeye ulaşabil
 - [x] Add building Coords | datas.js
 - [x] Add Nodes with traffic coeff | datas.js
 - [x] Style index.html 
-  - [x] Add leaflet css 
   - [x] Add buttons, textboxs, labes to index.html
 - [x] import nodes to function
 - [x] test node print by getGraph()
